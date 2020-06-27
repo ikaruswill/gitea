@@ -1,7 +1,9 @@
-FROM alpine:3.11
+FROM alpine:3.12
 LABEL maintainer="maintainers@gitea.io"
 
 ARG GITEA_VERSION
+ARG BINARY_OS
+ARG BINARY_ARCH
 
 EXPOSE 22 3000
 
@@ -58,8 +60,8 @@ RUN mkdir /gitea-docker \
 # Get gitea and verify signature
 RUN mkdir -p /app/gitea \
     && gpg --keyserver keyserver.ubuntu.com --recv 7C9E68152594688862D62AF62D9AE806EC1592E2 \
-    && curl -sLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/${GITEA_VERSION}/gitea-${GITEA_VERSION#v}-linux-arm-6 \
-    && curl -sLo /app/gitea/gitea.asc https://github.com/go-gitea/gitea/releases/download/${GITEA_VERSION}/gitea-${GITEA_VERSION#v}-linux-arm-6.asc \
+    && curl -sLo /app/gitea/gitea https://github.com/go-gitea/gitea/releases/download/${GITEA_VERSION}/gitea-${GITEA_VERSION#v}-${BINARY_OS}-${BINARY_ARCH} \
+    && curl -sLo /app/gitea/gitea.asc https://github.com/go-gitea/gitea/releases/download/${GITEA_VERSION}/gitea-${GITEA_VERSION#v}-${BINARY_OS}-${BINARY_ARCH}.asc \
     && gpg --verify /app/gitea/gitea.asc /app/gitea/gitea \
     && chmod 0755 /app/gitea/gitea \
     && ln -s /app/gitea/gitea /usr/local/bin/gitea \
